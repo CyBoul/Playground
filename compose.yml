@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=theotherdatasource'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=cyb'
+    ports:
+      - '5432:5432'
