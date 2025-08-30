@@ -1,12 +1,13 @@
 package com.cyboul.demo.web;
 
 import com.cyboul.demo.data.PetRepository;
-import com.cyboul.demo.model.Pet;
+import com.cyboul.demo.model.pet.Pet;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/pets")
+@RequestMapping("/api/pets")
 public class PetController {
 
     private final PetRepository repository;

@@ -1,7 +1,6 @@
 package com.cyboul.demo.data;
 
-import com.cyboul.demo.model.Pets;
-
+import com.cyboul.demo.model.pet.Pets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Load JSON data after application has booted
+ * /resources/data/Pets.json
+ *
+ */
 @Component
 public class JsonDataLoader implements CommandLineRunner {
 
@@ -31,6 +35,7 @@ public class JsonDataLoader implements CommandLineRunner {
                 Pets pets = objMapper.readValue(is, Pets.class);
                 log.info("Reading {} pets from JSON data and create them in the database", pets.pets().size());
                 petRepository.saveAll(pets.pets());
+
             } catch (IOException e) {
                throw new RuntimeException("Failed to load JSON data", e);
             }

@@ -1,6 +1,5 @@
 package com.cyboul.demo.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -9,7 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Profile("dev && h2")
+/**
+ * Access H2 console with spring security ON
+ */
+@Profile("h2")
 @Configuration
 @EnableWebSecurity
 public class H2WebSecurityConfig {
@@ -17,10 +19,10 @@ public class H2WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/h2-console/**").permitAll()
+                        .requestMatchers("/", "/home", "/h2-console/**", "/api/**").permitAll()
                         .anyRequest().authenticated())
 
-                // disable CSRF & allow iframes for H2 console
+                // !!! disable CSRF & allow iframes for H2 console
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
 

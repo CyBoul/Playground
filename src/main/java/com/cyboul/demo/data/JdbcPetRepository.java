@@ -1,12 +1,15 @@
 package com.cyboul.demo.data;
 
-import com.cyboul.demo.model.Pet;
+import com.cyboul.demo.model.pet.Pet;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Some JdbcClient usage
+ */
 //@Repository
 public class JdbcPetRepository {
 

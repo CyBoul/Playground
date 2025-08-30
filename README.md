@@ -11,6 +11,8 @@ Welcome to my **sandbox**, where I mess around, break stuff, learn, and occasion
 - Spring-Boot 3.5.5 ( ~Spring 6.2.10 )
 - Angular 20.2.2
 - Angular CLI 20.2.1
-- node 24.6.0
-- npm 11.5.2
+- Node 24.6.0
+- Npm 11.5.2
+- Postgres 42.7.4
+- Docker 
 
