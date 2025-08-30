@@ -1,14 +1,11 @@
-package com.cyboul.demo.model;
+package com.cyboul.demo.model.pet;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-
-import org.springframework.data.annotation.Version;
 import org.springframework.hateoas.RepresentationModel;
 
 @Getter
@@ -22,7 +19,6 @@ public class Pet extends RepresentationModel<Pet> {
     private String name;
     private String description;
     private Animal type;
-    @Version Integer version;
 
     public Pet (){}
 

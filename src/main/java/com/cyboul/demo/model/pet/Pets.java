@@ -1,4 +1,4 @@
-package com.cyboul.demo.model;
+package com.cyboul.demo.model.pet;
 
 import java.util.List;
 
