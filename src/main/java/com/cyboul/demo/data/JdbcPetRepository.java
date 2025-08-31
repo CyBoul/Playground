@@ -10,6 +10,7 @@ import java.util.Optional;
 /**
  * Some JdbcClient usage
  */
+// DISABLED
 //@Repository
 public class JdbcPetRepository {
 
