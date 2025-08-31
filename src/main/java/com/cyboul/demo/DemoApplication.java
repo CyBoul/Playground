@@ -1,11 +1,15 @@
 package com.cyboul.demo;
 
+import com.cyboul.demo.web.UserHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -27,13 +31,27 @@ public class DemoApplication {
         return new InMemoryUserDetailsManager(user);
     }
 
+    /**
+     * Register the Custom HttpClient interface as a Bean
+     * so Spring can manage the RestClient methods for us
+     * by only defining URLS in the contract (interface methods)
+     *
+     * @return an HttpClient for external API users consumption
+     */
+    @Bean
+    UserHttpClient userHttpClient(){
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(RestClient
+                        .create("https://jsonplaceholder.typicode.com")))
+                .build();
+
+        return factory.createClient(UserHttpClient.class);
+    }
+
 //    @Bean
-//    CommandLineRunner runner(UserRestClient client){
+//    CommandLineRunner runner(...){
 //        return args -> {
-//            client.findAll()
-//                    .stream()
-//                    .limit(2)
-//                    .forEach(System.out::println);
+//            ...
 //        };
 //    }
 
