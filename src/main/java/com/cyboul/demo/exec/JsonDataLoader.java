@@ -31,7 +31,7 @@ public class JsonDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if( petRepository.count() == 0 ){
+        if( petRepository.findAll().isEmpty() ){
             try (InputStream is = getClass().getResourceAsStream("/data/pets.json")){
                 Pets pets = objMapper.readValue(is, Pets.class);
                 log.info("Reading {} pets from JSON data and create them in the database", pets.pets().size());

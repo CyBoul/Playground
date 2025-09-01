@@ -1,31 +1,26 @@
 {
   "pets": [
     {
-      "id": 10,
       "name": "Bobby",
       "description": "Cute and sweet",
       "type": "DOG"
     },
     {
-      "id": 15,
       "name": "Diva",
       "description": "Cute and sweet",
       "type": "CAT"
     },
     {
-      "id": 20,
       "name": "Nixie",
       "description": "Love cuddles",
       "type": "DOG"
     },
     {
-      "id": 25,
       "name": "Luna",
       "description": "Very shy at first but very friendly if she likes you",
       "type": "CAT"
     },
     {
-      "id": 30,
       "name": "Kuma",
       "description": "Likes Bamboo",
       "type": "PANDA"

@@ -7,9 +7,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -26,56 +26,48 @@ public class PetController {
 
     @GetMapping("")
     public HttpEntity<List<Pet>> viewAll(){
-
         List<Pet> pets = repository.findAll();
-
-        pets.forEach(p -> {
-            p.add(linkTo(methodOn(PetController.class)
-                    .viewOne(p.getId()))
-                    .withSelfRel());
-            p.add(linkTo(methodOn(PetController.class)
-                    .viewAll())
-                    .withRel("all"));
-        });
-
+        pets.forEach(PetController::addLinks);
         return new ResponseEntity<>(pets, HttpStatus.OK);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("")
+    public void create(@Valid @RequestBody Pet pet){
+        repository.save(pet);
     }
 
     @GetMapping("/{id}")
     public HttpEntity<Pet> viewOne(@PathVariable Long id){
-
-        Optional<Pet> optPet = repository.findById(id);
-        if (optPet.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Pet pet = optPet.get();
-        pet.add(linkTo(methodOn(PetController.class)
-                    .viewOne(pet.getId()))
-                    .withSelfRel());
-        pet.add(linkTo(methodOn(PetController.class)
-                    .viewAll())
-                    .withRel("all"));
-
-        return new ResponseEntity<>(pet, HttpStatus.OK);
+        return repository.findById(id)
+                .map(pet -> new ResponseEntity<>(addLinks(pet), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    @PostMapping("")
-    public void create(@Valid @RequestBody Pet pet){
-        //
-    }
-
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id){
-        //
+    public void update(@PathVariable Long id, @Valid @RequestBody Pet pet){
+        repository.findById(id)
+                .map(p -> repository.save(pet))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-        //
+        repository.findById(id)
+                .map(p -> { repository.deleteById(p.getId()); return -1; })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private static Pet addLinks(Pet pet){
+        pet.add(linkTo(methodOn(PetController.class)
+                .viewOne(pet.getId()))
+                .withSelfRel());
+        pet.add(linkTo(methodOn(PetController.class)
+                .viewAll())
+                .withRel("all"));
+        return pet;
     }
 
 
