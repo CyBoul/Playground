@@ -13,24 +13,31 @@ import org.springframework.hateoas.RepresentationModel;
 public class Pet extends RepresentationModel<Pet> {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String description;
+    @JsonProperty private Long id;
+    @JsonProperty private String name;
+    @JsonProperty private String description;
 
     @Enumerated(EnumType.STRING)
-    private Animal type;
+    @JsonProperty private Animal type;
 
-    public Pet (){}
+    public Pet (){
+        this.name = "";
+        this.description = "";
+        this.type = Animal.UNKNOWN;
+    }
+
+    public Pet (String name){
+        this.name = name;
+        this.description = "";
+        this.type = Animal.UNKNOWN;
+    }
 
     @JsonCreator
-    public Pet (@JsonProperty Long id,
-            @JsonProperty String name,
-            @JsonProperty String description,
-            @JsonProperty Animal type
-    ){
+    public Pet (Long id, String name, String description, Animal type){
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
     }
+
 }
