@@ -9,15 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,7 +55,7 @@ public class PetControllerTests {
     void shouldFindOnePet() throws Exception {
         Pet pet = pets.getFirst();
         when(petRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pet));
-        mvc.perform(get("/api/pets/102"))
+        mvc.perform(get("/api/pets/101"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(pet.getId()))
                 .andExpect(jsonPath("$.name").value(pet.getName()))
@@ -64,67 +65,44 @@ public class PetControllerTests {
 
     @Test
     void shouldReturnNotFound() throws Exception {
-        mvc.perform(get("/api/pets/10101"))
-                .andExpect(status()
-                        .isNotFound());
+        when(petRepository.findById(90101L))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        mvc.perform(get("/api/pets/90101")).andExpect(status().isNotFound());
     }
 
     @Test
     void shouldCreate() throws Exception {
         Pet pet = new Pet(null, "Kuma", "Likes Bamboo", Animal.PANDA);
-
         mvc.perform(post("/api/pets")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(pet)))
-           .andExpect(status()
-                   .isCreated());
+                .andExpect(status().isCreated());
     }
 
     @Test
     void shouldEdit() throws Exception {
-        Optional<Pet> opt = pets.stream()
-                .filter(p -> p.getId() == 102L)
-                .findFirst();
+        Pet pet = pets.get(1);
+        pet.setName("Renamed");
+        when(petRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pet));
 
-        if( opt.isPresent() ){
-            Pet pet = opt.get();
-            pet.setType(pet.getType() == Animal.DOG ? Animal.WOLF : Animal.DOG);
-
-            when(petRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pet));
-
-            mvc.perform(put("/api/pets/" + pet.getId())
+        mvc.perform(put("/api/pets/" + pet.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(pet)))
-                    .andExpect(status()
-                            .isNoContent());
+                .andExpect(status().isNoContent());
 
-            mvc.perform(get("/api/pets/" + pet.getId()))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id").value(pet.getId()))
-                    .andExpect(jsonPath("$.name").value(pet.getName()))
-                    .andExpect(jsonPath("$.type").value(pet.getType().toString()))
-                    .andExpect(jsonPath("$.description").value(pet.getDescription()));
-
-        } else {
-            fail("Pet id:102 doesn't exist");
-        }
+        mvc.perform(get("/api/pets/" + pet.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(pet.getId()))
+                .andExpect(jsonPath("$.name").value(pet.getName()))
+                .andExpect(jsonPath("$.type").value(pet.getType().toString()))
+                .andExpect(jsonPath("$.description").value(pet.getDescription()));
     }
 
     @Test
     void shouldDelete() throws Exception {
-        Optional<Pet> opt = pets.stream()
-                .filter(p -> p.getId() == 101L)
-                .findFirst();
-
-        if( opt.isPresent() ) {
-            Pet pet = opt.get();
-            mvc.perform(delete("/api/pets/" + pet.getId())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(mapper.writeValueAsString(opt.get())))
-                    .andExpect(status()
-                            .isNoContent());
-        } else {
-            fail("Pet id:101 doesn't exist");
-        }
+        when(petRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pets.getFirst()));
+        mvc.perform(delete("/api/pets/1"))
+                .andExpect(status().isNoContent());
     }
 }

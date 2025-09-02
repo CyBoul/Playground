@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PetControllerIntTests {
 
-    @LocalServerPort private int randomPort;
+    @LocalServerPort
+    private int randomPort;
+
     private RestClient client;
 
     @BeforeEach
