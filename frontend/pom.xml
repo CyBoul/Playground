@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>frontend</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,18 +28,21 @@
                     <workingDirectory>.</workingDirectory>
                 </configuration>
                 <executions>
+                    <!-- install node & npm -->
                     <execution>
                         <id>install-npm</id>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
                     </execution>
+                    <!-- npm i -->
                     <execution>
                         <id>npm-install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                     </execution>
+                    <!-- npm build script = ng build -->
                     <execution>
                         <id>npm-build</id>
                         <goals>
