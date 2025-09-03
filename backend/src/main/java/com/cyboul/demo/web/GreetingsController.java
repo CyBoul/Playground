@@ -32,7 +32,7 @@ public class GreetingsController {
         return new ResponseEntity<>(greetings, HttpStatus.OK);
     }
 
-    @GetMapping("/gugu")
+    @GetMapping("/api/gugu")
     @ResponseBody
     public Map<String, Object> gugu(){
         Map<String, Object> model = new HashMap<>();

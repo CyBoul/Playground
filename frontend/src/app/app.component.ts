@@ -17,7 +17,7 @@ export class AppComponent {
   title = 'Gugu Demo';
   data = {}  as any;
   constructor(private http: HttpClient) {
-    http.get('gugu')
+    http.get('/api/gugu')
         .subscribe(data => this.data = data);
   }
 }

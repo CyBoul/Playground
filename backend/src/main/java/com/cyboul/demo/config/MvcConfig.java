@@ -12,14 +12,13 @@ public class MvcConfig implements WebMvcConfigurer {
         // Thymeleaf (/resources/templates)
         // Views: hello.html - home.html - login.html
 
-//        registry.addViewController("/home").setViewName("home");
 //        registry.addViewController("/").setViewName("home");
+//        registry.addViewController("/home").setViewName("home");
 //        registry.addViewController("/hello").setViewName("hello");
 //        registry.addViewController("/login").setViewName("login");
 
         // Angular SPA entry point >> index.html
-        registry.addViewController("/")
-                .setViewName("forward:/index.html");
+        registry.addViewController("/").setViewName("forward:/index.html");
 
     }
 
