@@ -4,9 +4,6 @@ import com.cyboul.demo.exec.UserHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
@@ -18,19 +15,18 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-    @Bean
-
-    public UserDetailsService userDetailsService() {
-        // in-memory temp user for web UI
-        UserDetails user = org.springframework.security.core.userdetails.User
-                .withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        // in-memory temp user for web UI
+//        UserDetails user = org.springframework.security.core.userdetails.User
+//                .withDefaultPasswordEncoder()
+//                .username("admin")
+//                .password("admin")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
     /**
      * Register the Custom HttpClient interface as a Bean
@@ -42,8 +38,9 @@ public class DemoApplication {
     @Bean
     UserHttpClient userHttpClient(){
         HttpServiceProxyFactory factory = HttpServiceProxyFactory
-                .builderFor(RestClientAdapter.create(RestClient
-                        .create("https://jsonplaceholder.typicode.com")))
+                .builderFor(RestClientAdapter
+                        .create(RestClient
+                            .create("https://jsonplaceholder.typicode.com")))
                 .build();
 
         return factory.createClient(UserHttpClient.class);
@@ -55,7 +52,5 @@ public class DemoApplication {
 //            ...
 //        };
 //    }
-
-
 
 }
