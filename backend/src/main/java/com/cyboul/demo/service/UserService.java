@@ -21,15 +21,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = Optional
-                .ofNullable(userRepository.findByUsername(username))
+                .ofNullable(userRepository.findByEmail(email))
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
-        return new org.springframework.security.core
-                .userdetails.User(
-                        user.username(), user.password(),
-                        Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
-                );
+        return new org.springframework.security.core.userdetails.User(user.email(), user.password(),
+                    Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
     }
+
 }

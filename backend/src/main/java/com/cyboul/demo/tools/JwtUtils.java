@@ -1,4 +1,4 @@
-package com.cyboul.demo.service;
+package com.cyboul.demo.tools;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
