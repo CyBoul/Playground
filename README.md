@@ -21,23 +21,36 @@ Welcome to my **sandbox**, where I mess around, break stuff, learn, and occasion
   - Angular CLI https://www.npmjs.com/package/@angular/cli
   - Farewell Eclipse https://www.jetbrains.com/
 
+- ✔ Init a basic spring-boot project
+  - ✔ Generate starter with [Spring Initializr](https://start.spring.io/)
+  - ✔ Start with some `RestController`
+- ✔ Connect to a Database 
+    - ✔ Use `H2` inMemoryDB (temp)
+      - ✔ Play with JDBC and Repositories
+      - ✔ Add some unit and integration tests
+    - ✔ Change `H2` by dockerized `Postgres`
+- ✔ Web Interface
+    - ✔ Add `Spring-secu` + `Thymeleaf` for a simple view (temp)
+- ✔ Prepare for Angular
+    - ✔ Create modules ([cf structure](structure.md)) + Fix POMs
+    - ✔ Create a minimal Angular app
+    - ✔ Replace `Thymeleaf` views by a redirection to `Angular` SPA entrypoint
+    - ✔ Configure maven with plugins for build automation
+- Use JWT to secure the API 
+  - Backend
+    - ✔ Create tool class for JWT validation & token
+    - ✔ Change to **stateless** authentication in `Spring-secu` config
+    - ✔ Create a `Filter` (interceptor) to validate requests
+    - ✔ Create an AuthenticationController for login call
+  - Front
+    - Create Interceptor to inject token in API calls
 
-- ✔ Generate starter with [Spring Initializr](https://start.spring.io/)
-- ✔ Start with some RestController + H2 inMemoryDB (temp)
-- ✔ Play with JDBC and Repositories
-- ✔ Add some unit and integration tests
-- ✔ Change H2 by dockerized Postgres
-- ✔ Add Spring-secu + Thymeleaf for a simple view (temp)
-- ✔ Create modules to separate frontend & backend ([cf structure](structure.md))
-- ✔ Fix POMs
-- ✔ Create a minimal Angular app
-- ✔ Replace Thymeleaf views by a redirection to Angular SPA entrypoint
-- ✔ Configure maven with plugins for build automation
 
 
-- Use JWT to secure the API
-- Implement authentication in frontend calls
-- Truly enable Spring-security
+- Password encryption -> Bcrypt
+- Time of Tokens
+- Role based access
+- CORS config
 - Import and play a bit with Bootstrap/PrimeNg 
 - Create the login page
 
