@@ -35,11 +35,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String,String>> login(@RequestBody AuthRequest request){
 
-        UserDetails userDetails = userService.loadUserByUsername(request.email());
-        String jwt = jwtUtils.generateToken(userDetails.getUsername());
-
+        // Validate credentials
         authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.email(), request.password()));
+
+        // Load user & create token
+        UserDetails userDetails = userService.loadUserByUsername(request.email());
+        String jwt = jwtUtils.generateToken(userDetails.getUsername());
 
         return ResponseEntity.ok(Collections.singletonMap("token", jwt));
     }
