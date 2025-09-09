@@ -10,6 +10,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
+    console.log('JWT Interceptor triggered', token, req.url);
     if (token) {
       const cloned = req.clone({
         setHeaders: {

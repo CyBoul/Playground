@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +8,31 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api/auth';
+  private token: string | null = null;
 
   constructor(private http: HttpClient) {}
+
+  initAppAuth(): Observable<void> {
+    return this.http
+      .post<{ token: string }>(
+        '/api/auth/login', 
+        {
+          username: 'frontend-app',
+          password: 'frontend-secret'
+        }
+      )
+      .pipe(
+        tap(({ token }) => {
+          this.token = token;
+          this.saveToken(token) // optional, for persistence
+        }),
+        map(() => void 0), // convert to Observable<void>
+        catchError(err => {
+          console.error('Auto-login failed', err);
+          return of(void 0); // app still starts even if login fails
+        })
+      );
+  }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { username, password });
@@ -20,10 +43,11 @@ export class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('jwt');
+    return this.token || localStorage.getItem('jwt');
   }
 
   logout() {
+    this.token = null;
     localStorage.removeItem('jwt');
   }
 }
