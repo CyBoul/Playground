@@ -11,7 +11,7 @@
 *.ipr
 
 ### VS Code ###
-frontend/.vscode
+**/.vscode
 
 ### Node ###
 frontend/node_modules
