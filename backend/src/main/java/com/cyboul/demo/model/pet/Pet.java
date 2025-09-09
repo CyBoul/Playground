@@ -1,7 +1,6 @@
 package com.cyboul.demo.model.pet;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +12,12 @@ import org.springframework.hateoas.RepresentationModel;
 public class Pet extends RepresentationModel<Pet> {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty private Long id;
-    @JsonProperty private String name;
-    @JsonProperty private String description;
+    private Long id;
+    private String name;
+    private String description;
 
     @Enumerated(EnumType.STRING)
-    @JsonProperty private Animal type;
+    private Animal type;
 
     public Pet (){
         this.name = "";

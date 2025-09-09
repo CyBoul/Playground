@@ -1,6 +1,6 @@
 package com.cyboul.demo;
 
-import com.cyboul.demo.exec.UserHttpClient;
+import com.cyboul.demo.logic.data.UserHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

@@ -24,7 +24,7 @@ public class GreetingsController {
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @RequestMapping("/api/greeting")
+    @RequestMapping("/greeting")
     public HttpEntity<Greeting> greet(
             @RequestParam(value = "name", required=false, defaultValue = "World") String name
     ){
@@ -32,7 +32,7 @@ public class GreetingsController {
         return new ResponseEntity<>(greetings, HttpStatus.OK);
     }
 
-    @GetMapping("/api/gugu")
+    @GetMapping("/gugu")
     @ResponseBody
     public Map<String, Object> gugu(){
         Map<String, Object> model = new HashMap<>();

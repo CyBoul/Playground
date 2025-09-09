@@ -1,6 +1,6 @@
 package com.cyboul.demo.web;
 
-import com.cyboul.demo.data.PetRepository;
+import com.cyboul.demo.logic.data.PetRepository;
 import com.cyboul.demo.model.pet.Pet;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpEntity;

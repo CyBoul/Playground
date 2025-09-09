@@ -1,6 +1,6 @@
 package com.cyboul.demo.web;
 
-import com.cyboul.demo.data.PetRepository;
+import com.cyboul.demo.logic.data.PetRepository;
 import com.cyboul.demo.model.pet.Animal;
 import com.cyboul.demo.model.pet.Pet;
 import com.fasterxml.jackson.databind.ObjectMapper;

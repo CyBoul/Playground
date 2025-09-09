@@ -1,10 +1,10 @@
-package com.cyboul.demo.exec;
+package com.cyboul.demo.logic.exec;
 
+import com.cyboul.demo.logic.data.UserHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
 
 /**
  * Consume an external and public API
@@ -16,13 +16,9 @@ public class RestClientRunner implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(RestClientRunner.class);
 
-//    private final UserRestClient client;
     private final UserHttpClient client;
 
-    public RestClientRunner(
-            /*UserRestClient userRestClient*/
-            UserHttpClient userHttpClient
-    ){
+    public RestClientRunner(UserHttpClient userHttpClient){
         //this.client = userRestClient;
         this.client = userHttpClient;
     }

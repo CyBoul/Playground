@@ -9,7 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    private static final String[] DEFAULT_NAV = new String[]{ "/", "/api/auth/**" };
+    private static final String[] DEFAULT_NAV = new String[]{ "/", "/api/auth/**", "/gugu" };
     private static final String[] ANGU_ASSETS = new String[]{ "/index.html", "/*.css", "/*.js" };
 
     @Bean
@@ -38,11 +38,19 @@ public class WebSecurityConfig {
                     .requestMatchers(DEFAULT_NAV).permitAll()
                     .requestMatchers(ANGU_ASSETS).permitAll()
                     .anyRequest().authenticated())
+
+                // Stateless API, so...
                 .sessionManagement(session -> session
                      .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> {}) // will use the bean below
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // Disabled for dev purpose
+                .cors(AbstractHttpConfigurer::disable)
+                //.cors(cors -> {}) // Declare CorsConfigurationSource (bean) and do nothing with it
+
                 //.formLogin((form) -> form.loginPage("/login").permitAll())
-                .logout(LogoutConfigurer::permitAll);
+                //.logout(LogoutConfigurer::permitAll)
+        ;
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -59,9 +67,11 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // This bean will be used by `http.cors(cors -> {})` in `securityFilterChain()`
     @Bean
+    @Profile("dev")
     public CorsConfigurationSource corsConfigurationSource() {
+        // This bean will be used by `http.cors(cors -> {})` in `securityFilterChain()`
+
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:4200"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

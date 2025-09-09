@@ -1,4 +1,4 @@
-package com.cyboul.demo.data;
+package com.cyboul.demo.logic.data.disabled;
 
 import com.cyboul.demo.model.pet.Pet;
 import org.springframework.jdbc.core.simple.JdbcClient;

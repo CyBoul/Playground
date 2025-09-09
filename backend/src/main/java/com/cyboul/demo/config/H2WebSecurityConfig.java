@@ -9,8 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,17 +44,23 @@ public class H2WebSecurityConfig {
                         .requestMatchers(ANGU_ASSETS).permitAll()
                         .requestMatchers(H2_CONSOLE).permitAll()
                         .anyRequest().authenticated())
+
+                // Stateless API, so...
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> {})
+                .csrf(AbstractHttpConfigurer::disable)
 
-                // !!! disable CSRF & allow iframes for H2 console
-                .csrf(csrf -> csrf.ignoringRequestMatchers(H2_CONSOLE))
+                // Disabled for dev purpose
+                //.cors(cors -> {})   // Declare CorsConfigurationSource (bean) and do nothing with it
+                .cors(AbstractHttpConfigurer::disable)
+
+                // !!! Disable CSRF & allow iframes for H2 console
+                //.csrf(csrf -> csrf.ignoringRequestMatchers(H2_CONSOLE))
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
                 //.formLogin((form) -> form.loginPage("/login").permitAll())
-                .logout(LogoutConfigurer::permitAll);
+                //.logout(LogoutConfigurer::permitAll);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

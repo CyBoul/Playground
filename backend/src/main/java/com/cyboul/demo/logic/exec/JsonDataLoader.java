@@ -1,13 +1,14 @@
-package com.cyboul.demo.exec;
+package com.cyboul.demo.logic.exec;
 
-import com.cyboul.demo.data.PetRepository;
-import com.cyboul.demo.data.UserRepository;
+import com.cyboul.demo.logic.data.PetRepository;
+import com.cyboul.demo.logic.data.UserRepository;
 import com.cyboul.demo.model.pet.Pets;
 import com.cyboul.demo.model.user.Users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,11 +28,13 @@ public class JsonDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PetRepository petRepository;
     private final ObjectMapper objMapper;
+    private final PasswordEncoder encoder;
 
-    public JsonDataLoader(UserRepository userRepository, PetRepository petRepository, ObjectMapper objMapper) {
+    public JsonDataLoader(UserRepository userRepository, PetRepository petRepository, ObjectMapper objMapper, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.petRepository = petRepository;
         this.objMapper = objMapper;
+        this.encoder = encoder;
     }
 
     @Override
@@ -44,6 +47,7 @@ public class JsonDataLoader implements CommandLineRunner {
         if( userRepository.findAll().isEmpty() ){
             try (InputStream is = getClass().getResourceAsStream("/data/users.json")){
                 Users users = objMapper.readValue(is, Users.class);
+                users.users().forEach(u -> u.setPassword(encoder.encode(u.getPassword())));
                 log.info("Reading and injecting {} users from JSON into the database", users.users().size());
                 userRepository.saveAll(users.users());
 

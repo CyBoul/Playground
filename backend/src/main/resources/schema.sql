@@ -11,6 +11,7 @@ create table if not exists USR(
     username varchar(50) NOT NULL,
     password varchar(50) NOT NULL,
     email varchar(150) NOT NULL,
+    role varchar(50) NOT NULL,
     PRIMARY KEY (id)
 );
 

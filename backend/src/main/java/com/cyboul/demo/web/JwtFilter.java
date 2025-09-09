@@ -1,6 +1,6 @@
 package com.cyboul.demo.web;
 
-import com.cyboul.demo.service.UserService;
+import com.cyboul.demo.logic.service.UserService;
 import com.cyboul.demo.tools.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

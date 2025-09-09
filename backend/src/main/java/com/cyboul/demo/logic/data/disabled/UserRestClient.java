@@ -1,4 +1,4 @@
-package com.cyboul.demo.exec;
+package com.cyboul.demo.logic.data.disabled;
 
 import com.cyboul.demo.model.externals.UserAPI;
 import org.springframework.core.ParameterizedTypeReference;

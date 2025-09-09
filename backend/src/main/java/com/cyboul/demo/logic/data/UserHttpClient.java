@@ -1,4 +1,4 @@
-package com.cyboul.demo.exec;
+package com.cyboul.demo.logic.data;
 
 import com.cyboul.demo.model.externals.UserAPI;
 import org.springframework.web.bind.annotation.PathVariable;
