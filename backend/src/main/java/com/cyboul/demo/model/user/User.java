@@ -1,7 +1,6 @@
 package com.cyboul.demo.model.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,10 +18,10 @@ public class User {
     private Long id;
 
     private String username;
-    @JsonIgnore private String email;
-    @JsonIgnore private String password;
+    private String email;
+    private String password;
 
-    @JsonIgnore @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Role role = ROLE_USER;
 
     public User(){}

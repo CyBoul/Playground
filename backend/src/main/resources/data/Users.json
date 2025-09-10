@@ -3,17 +3,20 @@
     {
       "username": "frontend-app",
       "password": "frontend-secret",
-      "email": "frontend-app"
+      "email": "frontend-app",
+      "role": "ROLE_USER"
     },
     {
       "username": "admin",
       "password": "admin",
-      "email": "admin@fake.com"
+      "email": "admin@fake.com",
+      "role": "ROLE_GOD"
     },
     {
       "username": "Bob",
       "password": "password",
-      "email": "bob@fake.com"
+      "email": "bob@fake.com",
+      "role": "ROLE_USER"
     }
   ]
 }

@@ -47,7 +47,11 @@ public class JsonDataLoader implements CommandLineRunner {
         if( userRepository.findAll().isEmpty() ){
             try (InputStream is = getClass().getResourceAsStream("/data/users.json")){
                 Users users = objMapper.readValue(is, Users.class);
-                users.users().forEach(u -> u.setPassword(encoder.encode(u.getPassword())));
+                users.users().forEach(u -> {
+                    String raw = u.getPassword();
+                    u.setPassword(encoder.encode(raw));
+                    log.info("encoding: " + raw + " as: " + u.getPassword());
+                });
                 log.info("Reading and injecting {} users from JSON into the database", users.users().size());
                 userRepository.saveAll(users.users());
 
