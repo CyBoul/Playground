@@ -7,24 +7,24 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = '/api/auth';
   private token: string | null = null;
 
   constructor(private http: HttpClient) {}
 
-  initAppAuth(): Observable<void> {
+  initAppAuth(): Observable<void> {  // ToRmv  // just for testing purposes
     return this.http
       .post<{ token: string }>(
         '/api/auth/login', 
         {
-          username: 'frontend-app',
+          email: 'frontend-app',
           password: 'frontend-secret'
         }
       )
       .pipe(
         tap(({ token }) => {
           this.token = token;
-          this.saveToken(token) // optional, for persistence
+          //this.saveToken(token) // optional, for persistence 
         }),
         map(() => void 0), // convert to Observable<void>
         catchError(err => {
@@ -34,20 +34,30 @@ export class AuthService {
       );
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { username, password });
+  login(email: string, password: string): Observable<any> {
+    return this.http
+        .post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+          .pipe(
+            tap(({ token }) => {
+              this.token = token;
+            }),
+            map(() => void 0), // convert to Observable<void>
+            catchError(err => {
+              console.error('Auto-login failed', err);
+              return of(void 0); // app still starts even if login fails
+            })
+          );
   }
 
-  saveToken(token: string) {
-    localStorage.setItem('jwt', token);
-  }
+  //saveToken(token: string) { localStorage.setItem('jwt', token); }
 
   getToken() {
-    return this.token || localStorage.getItem('jwt');
+    return this.token;
+    //|| localStorage.getItem('jwt'); // ToRmv
   }
 
   logout() {
     this.token = null;
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('jwt'); // ToRmv
   }
 }

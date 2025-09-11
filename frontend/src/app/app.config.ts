@@ -13,9 +13,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },
+
+    // ToRmv // Tests purposes
     provideAppInitializer(async () => {
       const authService = inject(AuthService);
-      await firstValueFrom(authService.initAppAuth());
+      return await firstValueFrom(authService.initAppAuth());
     }),
   ]
 };

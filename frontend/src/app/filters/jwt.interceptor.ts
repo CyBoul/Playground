@@ -9,15 +9,18 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken();
-    console.log('JWT Interceptor triggered', token, req.url);
-    if (token) {
-      const cloned = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return next.handle(cloned);
+
+    if(req.url != '/api/auth/login'){
+      const token = this.authService.getToken();
+      console.log('JWT Interceptor triggered', token, req.url);
+      if (token) {
+        const cloned = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        return next.handle(cloned);
+      }
     }
     return next.handle(req);
   }
