@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,36 +22,45 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@Profile("!h2")
+/**
+ * Access H2 console with spring security ON
+ */
+@Profile("h2")
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class H2SecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
 
-    private static final String[] DEFAULT_NAV = new String[]{ "/", "/api/auth/**", "/gugu" };
+    private static final String[] DEFAULT_NAV = new String[]{ "/", "/api/auth/**" };
     private static final String[] ANGU_ASSETS = new String[]{ "/index.html", "/*.css", "/*.js" };
+    private static final String[] H2_CONSOLE  = new String[]{ "/h2-console/**" };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                    .requestMatchers(DEFAULT_NAV).permitAll()
-                    .requestMatchers(ANGU_ASSETS).permitAll()
-                    .anyRequest().authenticated())
+                        .requestMatchers(DEFAULT_NAV).permitAll()
+                        .requestMatchers(ANGU_ASSETS).permitAll()
+                        .requestMatchers(H2_CONSOLE).permitAll()
+                        .anyRequest().authenticated())
 
                 // Stateless API, so...
                 .sessionManagement(session -> session
-                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
 
                 // Disabled for dev purpose
+                //.cors(cors -> {})   // Declare CorsConfigurationSource (bean) and do nothing with it
                 .cors(AbstractHttpConfigurer::disable)
-                //.cors(cors -> {}) // Declare CorsConfigurationSource (bean) and do nothing with it
+
+                // !!! Disable CSRF & allow iframes for H2 console
+                //.csrf(csrf -> csrf.ignoringRequestMatchers(H2_CONSOLE))
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
                 //.formLogin((form) -> form.loginPage("/login").permitAll())
-                //.logout(LogoutConfigurer::permitAll)
-        ;
+                //.logout(LogoutConfigurer::permitAll);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -67,11 +77,9 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Profile("dev")
+    // This bean will be used by `http.cors(cors -> {})` in `securityFilterChain()`
+    //@Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // This bean will be used by `http.cors(cors -> {})` in `securityFilterChain()`
-
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:4200"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
