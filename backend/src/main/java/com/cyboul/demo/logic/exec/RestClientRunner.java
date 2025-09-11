@@ -4,14 +4,14 @@ import com.cyboul.demo.logic.data.UserHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+//import org.springframework.stereotype.Component;
 
 /**
  * Consume an external and public API
  * https://jsonplaceholder.typicode.com/users
  *
  */
-@Component
+//@Component // Disabled
 public class RestClientRunner implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(RestClientRunner.class);
