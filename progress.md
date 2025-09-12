@@ -197,5 +197,51 @@ _The modules' order declared in the parent POM define the order for build execut
   - ✔ Change to **stateless** authentication in `Spring-secu` config
   - ✔ Create a `Filter` (interceptor) to validate requests
   - ✔ Create an AuthenticationController for login call
+```shell
+curl -i http://localhost:8080/api/gugu
+HTTP/1.1 403
+...
+# GET /api/gugu rejected, normal it now requires authentication
+
+curl -i  http://localhost:8080/api/pets                                                   
+HTTP/1.1 403 
+# Get /api/pets rejected, same reason as previously
+
+curl -i http://localhost:8080/api/auth/login
+HTTP/1.1 403 
+Allow: POST
+...
+# GET /api/auth/login rejected also, and tells us it allows POST, Good!
+# POST with no content is rejected also
+
+curl -i -H "Content-Type: application/json" \
+     -d "{\"email\":\"admin@fake.com\",\"password\":\"WrongPass\"}" \ 
+     http://localhost:8080/api/auth/login  
+     
+HTTP/1.1 400 # 400 to differentiate -> wrong credentials
+```
+```shell
+curl -i -H "Content-Type: application/json" \ 
+     -d "{\"email\":\"admin@fake.com\",\"password\":\"admin\"}" \ 
+     http://localhost:8080/api/auth/login
+     
+HTTP/1.1 200 
+Content-Type: application/json
+...
+{"token":"eyJhbGciOiJIUzI1NiJ9...axGZE"}
+# Successful authentication, which grants the jwt token
+
+curl -i -H "Content-Type: application/json" \
+        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...axGZE" \ 
+        http://localhost:8080/api/pets
+        
+HTTP/1.1 200 
+Content-Type: application/json
+...
+[{"id":1,"name":"Bobby","description":"Cute and sweet","type":"DOG"...}]
+# Successful fetching data 
+```
+
+
 - Front
   -  _next_ >> Create http-interceptor to inject token in API calls 
